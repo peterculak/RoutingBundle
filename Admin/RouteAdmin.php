@@ -70,6 +70,12 @@ class RouteAdmin extends Admin
         ->end();
 
         if (null === $this->getParentFieldDescription()) {
+            $defaults = array();
+            $options = array();
+            if ($subject = $this->getSubject()) {
+                $defaults = $subject->getDefaults();
+                $options = $subject->getOptions();
+            }
             $formMapper
                 ->with('form.group_general', array(
                     'translation_domain' => 'CmfRoutingBundle',
@@ -83,13 +89,13 @@ class RouteAdmin extends Admin
                     ->add(
                         'defaults',
                         'sonata_type_immutable_array',
-                        array('keys' => $this->configureFieldsForDefaults($this->getSubject()->getDefaults()))
+                        array('keys' => $this->configureFieldsForDefaults($defaults))
                     )
                     ->add(
                         'options',
                         'sonata_type_immutable_array',
                         array(
-                            'keys' => $this->configureFieldsForOptions($this->getSubject()->getOptions())),
+                            'keys' => $this->configureFieldsForOptions($options)),
                         array('help' => 'form.help_options')
                     )
                 ->end()
